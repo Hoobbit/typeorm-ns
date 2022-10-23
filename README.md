@@ -1,3 +1,3 @@
-# dumutils
+# typeorm domain
 
-my util
+## init default datasource
