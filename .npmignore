@@ -1,0 +1,14 @@
+.DS_Store
+
+.git
+.gitignore
+.npmignore
+.npmrc
+*.spec.*
+
+tsconfig.json
+
+.github/
+
+test/
+src/
