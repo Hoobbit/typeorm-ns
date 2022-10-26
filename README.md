@@ -37,21 +37,23 @@ initDefaultDataSource()
 
 ```
 import { getRepository } from 'typeorm-ns'
+import { EntityA } from '@entity/EntityA'
 
-const entityRepo = getRepository(Entity)
-return await entityRepo.findAndCount(...)
+const aRepo = getRepository(EntityA)
+return await aRepo.findAndCount(...)
 ```
 
 #### use transaction
 
 ```
 import { getTrxMgr } from 'typeorm-ns'
+import { EntityA } from '@entity/EntityA'
 
 return getTrxMgr().transaction(async (trxMgr: EntityManager) => {
-  const entityRepo = trxMgr.getRepository(Entity)
-  await entityRepo.save(...)
+  const aRepo = trxMgr.getRepository(EntityA)
+  await aRepo.save(...)
   // do something ...
-  const [items, total] = await entityRepo.findAndCount(...)
+  const [items, total] = await aRepo.findAndCount(...)
   return { items, total }
 })
 ```
