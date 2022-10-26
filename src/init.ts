@@ -3,9 +3,12 @@ import commandLineArgs from 'command-line-args'
 import { DataSource, DataSourceOptions } from 'typeorm'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import appRootPath from 'app-root-path'
+import x from './ns'
 
-import x from './domain'
-export async function initDataSource() {
+/**
+ * initDefaultDataSource: init default datasource
+ */
+export async function initDefaultDataSource() {
 	// Setup command line options
 	const options = commandLineArgs([
 		{
@@ -18,9 +21,7 @@ export async function initDataSource() {
 
 	const path = appRootPath.resolve(`env/${options.env}.env`)
 	// Set the env file
-	const result = dotenv.config({
-		path
-	})
+	const result = dotenv.config({ path })
 
 	if (result.error) {
 		throw result.error
@@ -58,7 +59,7 @@ export async function initDataSource() {
 
 	const appDataSource = new DataSource(defaultOptions)
 	await appDataSource.initialize()
-	console.log('@pre-start default database connect successful~~~~~')
-
 	x.dds = appDataSource
+
+	console.log('default database connect successful~~~~~')
 }

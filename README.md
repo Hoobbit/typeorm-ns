@@ -1,3 +1,3 @@
-# typeorm domain
+# typeorm namespace
 
 ## init default datasource

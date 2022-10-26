@@ -12,3 +12,5 @@ tsconfig.json
 
 test/
 src/
+
+index.ts
