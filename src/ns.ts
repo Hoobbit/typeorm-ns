@@ -1,6 +1,6 @@
 import { DataSource, EntityTarget, ObjectLiteral } from 'typeorm'
 
-var x = {
+const x = {
 	dds: {} as DataSource // default data source
 }
 
