@@ -5,10 +5,11 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import appRootPath from 'app-root-path'
 import x from './ns'
 
+let suffix = 'js'
 /**
- * initDefaultDataSource: init default datasource
+ * initEnv: production, development
  */
-export async function initDefaultDataSource() {
+function initEnv() {
 	// Setup command line options
 	const options = commandLineArgs([
 		{
@@ -19,6 +20,7 @@ export async function initDefaultDataSource() {
 		}
 	])
 
+	console.info('options.env:', options.env)
 	const path = appRootPath.resolve(`env/${options.env}.env`)
 	// Set the env file
 	const result = dotenv.config({ path })
@@ -27,24 +29,33 @@ export async function initDefaultDataSource() {
 		throw result.error
 	}
 
+	suffix = options.env.indexOf('prod') >= 0 ? 'js' : 'ts'
+}
+initEnv()
+
+/**
+ * initDefaultDataSource: init default datasource
+ */
+export async function initDefaultDataSource() {
 	const defaultOptions: DataSourceOptions = {
 		name: 'default',
 		type: 'postgres',
 		host: process.env.TYPEORM_DEFAULT_HOST || 'localhost',
-		port: Number(process.env.TYPEORM_DEFAULT_PORT) || 5200,
+		port: Number(process.env.TYPEORM_DEFAULT_PORT) || 5432,
 		username: process.env.TYPEORM_DEFAULT_USERNAME,
 		password: process.env.TYPEORM_DEFAULT_PASSWORD,
 		database: process.env.TYPEORM_DEFAULT_DATABASE,
-		entities: ['src/entity/**/*.ts'],
-		migrations: ['src/migrations/*.ts'],
-		subscribers: ['src/subscribers/*.ts'],
+		entities: [appRootPath.resolve(`src/entity/**/*.${suffix}`)],
+		migrations: [appRootPath.resolve(`src/migrations/*.${suffix}`)],
+		subscribers: [appRootPath.resolve(`src/subscribers/*.${suffix}`)],
 		namingStrategy: new SnakeNamingStrategy(),
 		synchronize: process.env.TYPEORM_DEFAULT_SYNCHRONIZE == 'true',
 		logging: process.env.TYPEORM_DEFAULT_LOGGING == 'true',
 		extra: {
 			// based on  https://node-postgres.com/api/pool
 			// max connection pool size
-			max: Number(process.env.TYPEORM_DEFAULT_CONNECTION_MAX), // by default this is set to 10.
+			// by default this is set to 10.
+			max: Number(process.env.TYPEORM_DEFAULT_CONNECTION_MAX),
 			// connection timeout
 			connectionTimeoutMillis: Number(
 				process.env.TYPEORM_DEFAULT_CONNECTION_TIMEOUT
@@ -60,6 +71,4 @@ export async function initDefaultDataSource() {
 	const appDataSource = new DataSource(defaultOptions)
 	await appDataSource.initialize()
 	x.dds = appDataSource
-
-	console.log('default database connect successful~~~~~')
 }
