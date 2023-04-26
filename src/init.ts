@@ -51,6 +51,7 @@ export async function initDefaultDataSource() {
 		namingStrategy: new SnakeNamingStrategy(),
 		synchronize: process.env.TYPEORM_DEFAULT_SYNCHRONIZE == 'true',
 		logging: process.env.TYPEORM_DEFAULT_LOGGING == 'true',
+		// timezone: process.env.TZ || 'Asia/Shanghai',
 		extra: {
 			// based on  https://node-postgres.com/api/pool
 			// max connection pool size
@@ -69,6 +70,10 @@ export async function initDefaultDataSource() {
 	}
 
 	const appDataSource = new DataSource(defaultOptions)
-	await appDataSource.initialize()
+	try {
+		await appDataSource.initialize()
+	} catch (e) {
+		console.error(e)
+	}
 	x.dds = appDataSource
 }
