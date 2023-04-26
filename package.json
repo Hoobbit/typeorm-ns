@@ -1,6 +1,6 @@
 {
   "name": "typeorm-ns",
-  "version": "0.0.22",
+  "version": "0.1.0",
   "description": "typeorm init lib",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
